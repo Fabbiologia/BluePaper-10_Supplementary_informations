@@ -1,6 +1,6 @@
 #### Folder and dataset description
 
-This data refers to a fully reproducible analysis associated with the Blue Paper 10: **"A Global Habitat Strategy Framework"** section. 
+This data refers to a fully reproducible analysis associated with the "**Blue Paper 10: Critical habitats and biodiversity: Inventory, thresholds and governance**"
 
 This folder contains all the datasets extracted from various sources and ordered in the final dataset called: `data/BP-10-Dataset.xlsx`
 
