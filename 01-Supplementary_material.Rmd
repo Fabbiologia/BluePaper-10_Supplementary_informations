@@ -1,5 +1,5 @@
 ---
-title: "Current_conservation_effort_supplementary_material"
+title: "Current conservation effort: supplementary material"
 author: "Fabio Favoretto, Joy Kumagai, Octavio Aburto"
 date: "Last updated `r format(Sys.time(), '%d %B, %Y')`"
 output:
