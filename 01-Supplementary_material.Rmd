@@ -40,6 +40,8 @@ Datasets are three `.csv` text files:
 - `habitat_protected`: which contains how much of each habitat within each country is protected (protected);
 - `pressures_gdp_biodiversity`: which contains the environmental pressures, the total GDP (Gross Domestic Product in USD) and the estimated biodiversity for each of the country;
 
+Download an .Rmd version of this file from [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/01-Supplementary_material.Rmd).
+
 
 # Data Sources
 
@@ -91,7 +93,7 @@ It needs to be clarified that being inside a MPA does not mean the habitat is pr
 
 Below we reproduce the R code used to produce figure X and XX step by step. 
 
-The R code (v.3.6.2) was written using R-studio IDE (v.1.2.5033), as well as this document, using the following packages that can be installed in R or through R-studio using the following commands: 
+The following code was built with `r getRversion()` and was written using R-studio IDE (v.1.2.5033), as well as this document, using the following packages that can be installed in R or through R-studio using the following commands: 
 
 - `install.packages("dplyr")`
 - `install.packages("ggplot2")`
@@ -100,6 +102,8 @@ The R code (v.3.6.2) was written using R-studio IDE (v.1.2.5033), as well as thi
 - `install.packages("ggthemes")`
 - `install.packages("broom")`
 - `install.packages("knitr")`
+- `install.packages("RCurl")`
+
 
 Libraries needed:
 
@@ -112,6 +116,8 @@ library(cowplot)
 library(ggthemes)
 library(broom)
 library(knitr)
+library(RCurl)
+
 
 ```
 
@@ -125,8 +131,7 @@ To reproduce the scatterplots relating biodiversity, pressures, protection and G
 ```{r}
 
 # Loading pressure data
-
-pressures <- read_csv("data/pressures_gdp_biodiversity.csv")
+pressures <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv"))
 
 # Figure XXC
 
@@ -177,17 +182,16 @@ plot_grid(pC, pD, pE, labels=c("C", "D", "E"), nrow = 1)
 ```
 
 
-In this figure we report three comparisons among the variables in the `pressures_gdp_biodiversity` dataset. In Figure XXc a scatterplot represents the biodiversity values averaged for each EEZ compared with the pressure data for each EEZ. A linear model is fitted to the data.
+In this figure we report three comparisons among the variables in the `pressures_gdp_biodiversity` dataset. In Figure XXC a scatterplot represents the biodiversity values averaged for each EEZ compared with the pressure data for each EEZ. A linear model is fitted to the data, which resulted significant (Table SIII). In Figure XXD, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SIV). Finally, in Figure XXE, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.¨   
 
 
-Human Pressure *vs* Species Biodiversity regression
+*Table SIII: Human Pressure vs Species Biodiversity regression*
 
 ```{r}
 kable(tidy(lm(pressures_spp~biodiversity_points, data=pressures)))
 ```
 
-
-% MPA/EEZ *vs* % of World GDP regression
+*Table SIV: % MPA/EEZ vs % of World GDP regression*
 
 ```{r}
 pressures2 <- pressures %>% 
@@ -199,7 +203,7 @@ pressures2 <- pressures %>%
 kable(tidy(lm(percent_MPA ~ percent_GDP, data=pressures2)))
 ```
 
-Species Biodiversity *vs* % MPA/EEZ regression
+¨*Table SV: Species Biodiversity vs % MPA/EEZ regression*
 
 ```{r}
 pressures3 <- pressures %>% 
@@ -215,24 +219,18 @@ kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
 
 ## Figure XXX
 
+To reproduce the histograms of the conservation effort one can use the code below:
+
 ```{r}
-protected_areas <- read_csv("data/habitat_protected.csv")
+protected_areas <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv"))
 
 protected_areas %>%
-        filter(habitat_area > 0) %>% 
-        mutate(pp = (protected/habitat_area)*100) %>% 
-        mutate(pp_to_EEZ = (protected/eez_area)*100) %>% 
-        mutate(relative_to_EEZ = (habitat_area/eez_area)*100) %>% 
-        group_by(habitat) %>% 
-        mutate(world_hab_habitat_area = sum(habitat_area)) %>% 
-        ungroup() %>% 
-        mutate(relative_habitat_area_to_world = ((habitat_area/world_hab_habitat_area)*100)) %>% 
-        mutate_if(is.numeric, round, digits = 2) %>% 
-        select(habitat, country, pp) %>% 
-        group_by(habitat) %>% 
+        filter(habitat_area > 0) %>% # first we filter absent habitat for each country
+        mutate(pp = (protected/habitat_area)*100) %>% # Then we calculate the % protected of each habitat
+        group_by(habitat) %>% # we group the data for each habitat
         mutate(mean_pp = mean(pp), 
-               median_pp = median(pp)) %>% 
-        ungroup() %>% 
+               median_pp = median(pp)) %>% # here we calculate the mean percent protected and the median pp
+        ungroup() %>% # the code section below is for graphic purposes
         mutate(habitat = factor(.$habitat, labels=c("Cold Corals", 
                                                     "Coral Reefs",
                                                     "Estuaries", 
@@ -257,6 +255,9 @@ protected_areas %>%
               panel.border = element_rect(fill = NA, colour = "grey60"))
 
 ```
+
+We created this figure by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, the histogram bars represent how many countries (`Count`) fall within a % protection interval (i.e. histogram bins). Now, mean and median % protection for each habitat are represented by a blue and red vertical line respectively, and the dashed vertical line represent the ideal 30% protected threshold to maintain habitat functionality. 
+
 
 
 # References 
