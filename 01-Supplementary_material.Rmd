@@ -1,7 +1,7 @@
 ---
 title: "Current conservation effort: supplementary material"
 author: "Fabio Favoretto, Joy Kumagai, Octavio Aburto"
-date: "Last updated `r format(Sys.time(), '%d %B, %Y')`"
+date: "Last updated `r format(Sys.time(), '%d %m, %Y')`"
 output:
   pdf_document:
     toc: yes
@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
 ```
 
 
+\pagebreak
 
 # Premise
 
@@ -42,6 +43,7 @@ Datasets are three `.csv` text files:
 
 Download an .Rmd version of this file from [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/01-Supplementary_material.Rmd).
 
+\pagebreak
 
 # Data Sources
 
@@ -88,6 +90,7 @@ It needs to be clarified that being inside a MPA does not mean the habitat is pr
 
 ---
 
+\pagebreak
 
 # R-code for the figures
 
@@ -203,7 +206,7 @@ pressures2 <- pressures %>%
 kable(tidy(lm(percent_MPA ~ percent_GDP, data=pressures2)))
 ```
 
-¨*Table SV: Species Biodiversity vs % MPA/EEZ regression*
+*Table SV: Species Biodiversity vs % MPA/EEZ regression*
 
 ```{r}
 pressures3 <- pressures %>% 
@@ -240,8 +243,8 @@ protected_areas %>%
                                                     "Ridges",
                                                     "Saltmarsh", 
                                                     "Seagrasses",
-                                                    "Seamounts guyots", "
-                                                    Shelf valley canyons",
+                                                    "Seamounts guyots", 
+                                                    "Shelf valley canyons",
                                                     "Trenches"))) %>% 
         ggplot(aes(x=pp))+
         geom_histogram(fill="grey60", col="black")+
@@ -259,6 +262,8 @@ protected_areas %>%
 We created this figure by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, the histogram bars represent how many countries (`Count`) fall within a % protection interval (i.e. histogram bins). Now, mean and median % protection for each habitat are represented by a blue and red vertical line respectively, and the dashed vertical line represent the ideal 30% protected threshold to maintain habitat functionality. 
 
 
+---
+\pagebreak
 
 # References 
 
