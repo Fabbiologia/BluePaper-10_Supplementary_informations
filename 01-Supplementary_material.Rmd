@@ -37,7 +37,7 @@ Wrangled datasets of all the data mentioned in Table SI and SII are available in
 
 Datasets are three `.csv` text files:
 
-- `habitat_data`: which contains all the habitat extensions in squared kilometers for each country, as well as the area of each country Economic Exclusion Zone (EEZ) and total MPA area both in squared kilometers;
+- `habitat_data`: which contains all the habitat extensions in squared kilometers for each country, as well as the area of each country Exclusive Economic Zone (EEZ) and total MPA area both in squared kilometers;
 - `habitat_protected`: which contains how much of each habitat within each country is protected (protected);
 - `pressures_gdp_biodiversity`: which contains the environmental pressures, the total GDP (Gross Domestic Product in USD) and the estimated biodiversity for each of the country;
 
