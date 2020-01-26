@@ -1,6 +1,6 @@
 ---
 title: 'Supplementary Material of Marine biodiversity in a changing world: present status and future management'
-author: Rogers, Aburto-Oropeza *et al*
+author: "Rogers, *et al*"
 date: "Last updated `r format(Sys.time(), '%d %m, %Y')`"
 output:
   bookdown::pdf_document2:
@@ -8,6 +8,7 @@ output:
     fig_caption: true
     df_print: kable
     latex_engine: xelatex
+
 indent: true
 fontsize:  12pt
     
@@ -66,19 +67,47 @@ PAL <- c('#e6194b', '#3cb44b', '#ffe119', '#4363d8',
          '#808000', '#ffd8b1', '#000075', '#808080', 
          '#ffffff', '#000000')
 
+# loading needed libraries
+
+library(tidyverse)
+library(readr)
+library(cowplot)
+library(ggthemes)
+library(broom)
+library(knitr)
+library(RCurl)
+library(janitor)
+library(vegan)
+library(ggfortify)
+library(cluster)
+library(factoextra)
+library(FactoMineR)
+library(stringr)
+require("igraph")
+library(tools)
+
 ```
 
 
 \pagebreak
 
+# Preface
 
+This supplementary was was built with `r getRversion()` programming language and was written using R-studio IDE (v.1.2.5033) by a R-markdown file. Data and R code scripts to replicate figures and analysis can be downloaded from [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations), as well as a [R-markdown](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/Supplementary_material_Marine_biodiversity_in_a_changing_world.Rmd) version of this supplementary.
+
+In this supplementary, we assume some knowledge of the R programming language. If instructions in the [Readme](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/README.md) file are followed, this should be fully reproducible using R studio. Please find [**the contacts informations**][Contacts] at the end of this supplementary to get in touch with the authors to report bugs or problems. 
+
+Beware that while all data used are open source (except for kelp which source has been removed until the dataset is published), specific permission to reuse and publish them are needed from data providers. Credit for the use of those data should also go to the proper source listed in Table SI and SII. 
+
+\pagebreak
 
 # The distribution of habitats
 
-
 ## Habitat area 
 
-We obtained the polygons of 6 habitats closely associated with the coast, and 6 more closely associated with open ocean, for a total of 12 majour habitats (Table SI). We then calculated the area for each habitat by dissolving the resulting layer by Country and projecting it into the World Cylindrical Equal Area projection, and then using the "Calculate Geometry" tool in ArcGIS v.10.5 Desktop software. Losses and gains in habitat extension that occurred the data aquisition dates were not accounted for. These data are available in the `habitat_data` file. 
+We obtained the polygons of 6 habitats closely associated with the coast, and 6 more closely associated with open ocean, for a total of 12 majour habitats (Table SI). We then calculated the area for each habitat by dissolving the resulting layer by Country and projecting it into the World Cylindrical Equal Area projection, and then using the "Calculate Geometry" tool in ArcGIS v.10.5 Desktop software. Losses and gains in habitat extension that occurred the data aquisition dates were not accounted for. 
+
+
 
 *Table SI: habitat data type, date of creation, and detailed references*
 
@@ -128,7 +157,8 @@ It should be noted that for many taxa there are multiple drivers of decline and 
 
 # Current conservation efforts
 
-The other variables used in this study and featured in the `pressures_gdp_biodiversity` file of the dataset are described in Table SII. 
+We calculated the protected habitat area by intersecting the dissolved MPA layer per each country EEZ for each of the habitat listed in Table SI. It needs to be clarified that being inside a MPA does not mean the habitat is protected, since the MPA objective and regulamentation might not involve the habitat at all. However, we consider that being inside an environmentally managed area should provide at least some indirect benefits to the habitat conservation.
+
 
 *Table SII: additional variables used in this section* 
 
@@ -141,34 +171,6 @@ The other variables used in this study and featured in the `pressures_gdp_biodiv
 | Protected habitat area | protected | Overlap between protected area and the target habitat in squared kilometers | This paper |
 | Marine Wilderness | wilderness | Areas identified from Jones et al. 2018 that have very little anthropogenic impact (lowest 10% from 15 stressors) and very low combined cumulative impact from these stressors. | Jones et al., 2018
 
-We calculated the protected habitat area by intersecting the dissolved MPA layer per each country EEZ for each of the habitat listed in Table SI. The resulting data are reported in the dataset `habitat_protected`.
-It needs to be clarified that being inside a MPA does not mean the habitat is protected, since the MPA objective and regulamentation might not involve the habitat at all. However, we consider that being inside an environmentally managed area should provide at least some indirect benefits to the habitat conservation.
-
-
-
-
-```{r}
-# loading needed libraries
-
-library(tidyverse)
-library(readr)
-library(cowplot)
-library(ggthemes)
-library(broom)
-library(knitr)
-library(RCurl)
-library(janitor)
-library(vegan)
-library(ggfortify)
-library(cluster)
-library(factoextra)
-library(FactoMineR)
-library(stringr)
-require("igraph")
-library(tools)
-
-```
-
 
 Datasets are three `.csv` text files:
 
@@ -176,22 +178,21 @@ Datasets are three `.csv` text files:
 - `habitat_protected`: which contains how much of each habitat within each country is protected (protected);
 - `pressures_gdp_biodiversity`: which contains the environmental pressures, the total GDP (Gross Domestic Product in USD) and the estimated biodiversity for each of the country;
 
-Download an .Rmd version of this file from [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/01-Supplementary_material.Rmd).
+Download an .Rmd version of this file from [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/Supplementary_material_Marine_biodiversity_in_a_changing_world.Rmd).
+
 
 \pagebreak
 
 
-## Data access and sources
-
-Beware that while all data used are open source (except for kelp which source has been removed until the dataset is published), specific permission to reuse and publish them are needed from data providers. Credit for the use of those data should also go to the proper source listed in Table SI and SII. 
 
 
 ## Figure 4: Relationship among conservation efforts, world economy and natural biodiversity. 
 
 
+In Figure 4, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
 
 
-```{r fig.align='center', fig.width=8, fig.height=4}
+```{r fig4,  fig.align='center', fig.width=8, fig.height=4}
 
 # Loading pressure data
 pressures <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv"))
@@ -238,16 +239,17 @@ pb <- ggplot(toplot, aes(x=percent_MPA, y=biodiversity_points)) +
 plot_grid(pa, pb, labels="auto", nrow = 1)
 
 ```
+*Figure 4: Relationship among conservation efforts, world economy and natural biodiversity (more detail in main text)*
 
 
+### Linear models
 
-In this figure we report the comparisons among the variables in the `pressures_gdp_biodiversity` dataset. In Figure XXa, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
-
+Below we calculate and report the linear model statistics of the two scatterplots in Figure 4:
 
 
 *Table SIV: % MPA/EEZ vs % of World GDP regression*
 
-```{r}
+```{r echo=FALSE}
 pressures2 <- pressures %>% 
         select(country, eez_area, mpa, gdp_tot) %>% 
         na.omit() %>% 
@@ -256,12 +258,11 @@ pressures2 <- pressures %>%
 
 kable(tidy(lm(percent_MPA ~ percent_GDP, data=pressures2)))
 
-summary(lm(percent_MPA ~ percent_GDP, data=pressures2))
 ```
 
-*Table SV: Species Biodiversity vs % MPA/EEZ regression*
 
-```{r}
+*Table SV: Species Biodiversity vs % MPA/EEZ regression*
+```{r echo=FALSE}
 pressures3 <- pressures %>% 
         select(country, eez_area, mpa, gdp_tot, biodiversity_points) %>% 
         na.omit() %>%
@@ -270,21 +271,17 @@ pressures3 <- pressures %>%
 kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
 
 ```
-
-
-## Figure 5. Current conservation efforts over key selected habitats. 
+    
+      
+## Figure 5. Current conservation efforts over key selected habitats.   
 
 ### Percent protected and percent in wilderness for each habitat globally calculations 
 
 The amount of each habitat within marine protected areas or wilderness was calculated in ArcGIS Pro 2.4 using the data in table SI and SII. The marine protected area polygons were first projected into the same projection and rasterized at the same resolution (~1km) as the global wilderness data (World Behrman). Next, each habitat was converted rasterized at the same resolution, using “Point to Raster” or “Polygon to Raster” tools depending on the data type. The number of pixels for each habitat were counted. Next, the habitat pixels within either marine protected area were counted using the “Extract by Mask” tool. This was repeated for the wilderness areas. These pixel counts were then used to calculate the percent of each habitat within marine protected areas or within wilderness displayed in Table SX. 
 Seagrasses spatial data in the United States had several geometry problems that were solved by first dicing the features with a maximum vertex of 1000 before geoprocessing this file. 
 
-### *Effort gap* calculations
-
-We created this figure by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, black circles represent countries hosting one of the key habitat in the x-axis. The y-axis represents how the percentage of area each country is protecting of that habitat within its EEZ. Most of the countries are below the 30% target (white line), which has been identified  as a threshold to ensure the maintenance of habitat’s ecosystems services. The blue circles represent the mean % of all the countries protection efforts to that habitat, whereas the red circles are the median % of all the countries protection efforts. 
 
 *Table SVI: The percent of each habitat within Marine Wilderness as defined by Jones et al. 2018 and  within marine protected areas (MPAs).*
-
 ```{r echo=FALSE, warning=TRUE}
 wilderness <- read.csv(
 text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/wilderness_protected.csv")
@@ -301,9 +298,12 @@ knitr::kable(
 ```
 
 
+### *Effort gap* calculations
 
+We created Figure 5b by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, black circles represent countries hosting one of the key habitat in the x-axis. The y-axis represents how the percentage of area each country is protecting of that habitat within its EEZ. Most of the countries are below the 30% target (white line), which has been identified  as a threshold to ensure the maintenance of habitat’s ecosystems services. The blue circles represent the mean % of all the countries protection efforts to that habitat, whereas the red circles are the median % of all the countries protection efforts. 
 
-```{r fig.align='center', fig.height=6, fig.width=4}
+Now with the following code we can recreate figure 5 in the main text:
+```{r fig5, fig.align='center', fig.height=6, fig.width=4, fig.cap="Figure 5. Current conservation efforts over key selected habitats."}
 
 
 protected_areas <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv"))
@@ -422,41 +422,52 @@ pb <- ggplot(toplot2, aes(x=habitat, y=percent))+
 plot_grid(pb, pa, labels = "auto", ncol=1, align = "v")
 
 ```
+*Figure 5. Current conservation efforts over key selected habitats.*
 
 
 
+\pagebreak
 
 # The future of marine biodiversity 
 
+In this paragraph, we have been using a compiled information about conventions and agreements related to marine regulations. The table used is available [here](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv). 
+
+The datatable has 1-0 values to whether a particular convention (rows of the data) apply to a conservation topic (columns of the data). We calculated an euclidean distance followed by a Ward hierarchical clusterization technique to explore the similarities in the conventions or agreements topics. 
+
+We used the code below to compute the cluster and create Figure 6. 
 
 ```{r fig.align='center', fig.width=5.5, fig.height=8}
-
-
-
-
-df <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/Internationa_agreements.csv")) %>% 
+# Reading the International convention and angreements dataset (ida)
+ica <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv")) %>% 
         clean_names() 
 
-rownames(df) <- df$convention_agreement
 
-res.dist <- dist(df[4:ncol(df)], method = "euclidean")
+# Changing row names
+rownames(ica) <- ica$convention_agreement
 
+# Calculating distance matrix
+res.dist <- dist(ica[4:ncol(ica)], method = "euclidean")
 
+# Cluster calculation
 res.hc <- hclust(d = res.dist, method = "ward.D2")
 
+# Cutting the cluster tree
 grp <- cutree(res.hc, k = 3)
 
-
+# Cluster visualization
 pa <- fviz_dend(res.hc, k = 3, # Cut in four groups
           palette = c("#c50000", "#408d78", "#007cba"),
           type = "phylogenic", repel = T,
           phylo_layout = "layout.gem", cex = .7, 
           rect=TRUE)
 
-df2 <- df %>% 
+# Converting the database in a long version for the plot of panel b and c
+ica2 <- ica %>% 
         pivot_longer(-c(long_name, convention_agreement, year),names_to="class", values_to = "value")
 
-pb <- df2 %>% 
+# Panel b
+
+pb <- ica2 %>% 
         select(class, convention_agreement, year, value) %>% 
         filter(value>0) %>% 
         mutate(class = toTitleCase(gsub("\\_", " ", .$class))) %>% 
@@ -472,9 +483,9 @@ pb <- df2 %>%
         theme_hc()+
         theme(legend.position = "")
 
+# Panel c
 
-
-pc <- df2 %>% 
+pc <- ica2 %>% 
         select(class, convention_agreement, year, value) %>% 
         filter(value>0) %>% 
         arrange(class) %>% 
@@ -489,12 +500,13 @@ pc <- df2 %>%
         theme_hc()+
         theme(legend.position = "")
 
+
+# Plotting the grid
+
 cowplot::plot_grid(pa, pb, pc,  labels = "auto", nrow = 3)
 
 ```
-
-
-
+*Figure 6: international conservation / agreements (more details in text).* 
 
 
 
