@@ -1,0 +1,539 @@
+---
+title: 'Supplementary Material of Marine biodiversity in a changing world: present status and future management'
+author: Rogers, Aburto-Oropeza *et al*
+date: "Last updated `r format(Sys.time(), '%d %m, %Y')`"
+output:
+  bookdown::pdf_document2:
+    toc: yes
+    fig_caption: true
+    df_print: kable
+    latex_engine: xelatex
+indent: true
+fontsize:  12pt
+    
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+# chunk options
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+
+# formula to create background gradient from data
+GenerateGradientData <- function(start_hour,
+                                 stop_hour,
+                                 start_colour,
+                                 stop_colour,
+                                 x_resolution = 100) {
+        
+        # define the colour palette
+        colour_function <- colorRampPalette(
+                c(start_colour, stop_colour),
+                alpha = TRUE)
+        
+        # set up the rect coordinates
+        x_range <- seq(start_hour,
+                       stop_hour,
+                       length.out = x_resolution + 1)
+        grad_xmin <- x_range[-length(x_range)]
+        grad_xmax <- x_range[c(1:x_resolution + 1)]
+        
+        # define colours
+        grad_colours <- colour_function(x_resolution)
+        
+        # return data.frame
+        data.frame(
+                xmin = grad_xmin,
+                xmax = grad_xmax,
+                ymin = -Inf,
+                ymax = Inf,
+                grad_colours = grad_colours
+        )
+}
+
+# personal palette
+PAL <- c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', 
+         '#f58231', '#911eb4', '#46f0f0', '#f032e6', 
+         '#bcf60c', '#fabebe', '#008080', '#e6beff', 
+         '#9a6324', '#fffac8', '#800000', '#aaffc3', 
+         '#808000', '#ffd8b1', '#000075', '#808080', 
+         '#ffffff', '#000000')
+
+```
+
+
+\pagebreak
+
+
+
+# The distribution of habitats
+
+
+## Habitat area 
+
+We obtained the polygons of 6 habitats closely associated with the coast, and 6 more closely associated with open ocean, for a total of 12 majour habitats (Table SI). We then calculated the area for each habitat by dissolving the resulting layer by Country and projecting it into the World Cylindrical Equal Area projection, and then using the "Calculate Geometry" tool in ArcGIS v.10.5 Desktop software. Losses and gains in habitat extension that occurred the data aquisition dates were not accounted for. These data are available in the `habitat_data` file. 
+
+*Table SI: habitat data type, date of creation, and detailed references*
+
+| Habitat |  Date of Data | Data Type | Source |
+| :---    |     :----:    |   :----:  |   ---: |
+| Estuaries | 2003 | Polygon | Alder (2003) |
+| Mangroves	| 1997 - 2000 | Polygon | Giri, et al. (2011) | 
+| Saltmarsh	| 1973 - 2015 | Points | McOwen, et al. (2017) |
+| Seagrasses | 1934 - 2015 | Polygon | UNEP-WCMC, Short FT (2017) |
+| Coral Reefs | 1954 - 2018 |	Polygon | UNEP-WCMC, WorldFish Centre, WRI, TNC (2018) |
+| Kelp | NA	| Point | Jorge Assis (submitted for publication) |
+| Cold Corals | 1915 - 2014 |	Point	| Freiwald A (2017) |
+| Sills | 1950 - 2009 | Polygon | Harris et al. (2014) |
+| Seamounts/Guyots | 1950 - 2009 | Polygon | Harris et al. (2014) |
+| Bridges | 1950 - 2009 | Polygon | Harris et al. (2014) |
+| Rift Valleys | 1950 - 2009 | Polygon | Harris et al. (2014) |
+| Hydrothermal Vents | 1994 - 2019 | Point | Beaulieu, S.E., Szafranski, K. (2019) |
+
+\pagebreak
+
+# Anthropogenic impacts on marine biodiversity 
+(**GABRIEL**)
+
+\pagebreak
+
+# The decline of marine species and habitats
+
+## Analysis of IUCN Red List for Levels of Extinction Risk
+
+For marine invertebrates and vertebrates, data were extracted from the IUCN online Summary Statistics (https://www.iucnredlist.org/search). The assessment was restricted to taxa with more than 10 species assessed, to reduce bias. Whilst these taxa represent a relatively small proportion of those living in marine environments, they are the best studied to date; therefore, they present a good (if taxonomically biased) dataset on which to assess extinction threat and its causes across a range of marine ecosystems (Webb & Mindel, 2015). Only around 3% of the ~ 240,000 described marine species have been assessed for the Red List (Sullivan et al., 2019).
+
+We note that a controversy began in the 1990s regarding the use of the IUCN extinction threat categories for commercially fished species (Rice & Legacè, 2007). The main policy instruments used for fisheries management (e.g. United Nations Convention on the Law of the Sea; the UN Fish Stocks Agreement and the FAO Code of Conduct for Responsible Fishing - see below) all highlight Bmsy (Biomass at Maximum Sustainable Yield), as a target for sustainable fisheries management. Under a sustainable management regime, it is possible to reduce a stock size to below levels which would trigger categorisation of a species or stock as threatened with extinction under the IUCN Red List criterion of decline in population size, while other fisheries management reference points indicate the stock can still be exploited (Rice & Legacè, 2007). Whilst this has been a subject of debate (see Rice & Legacè, 2007), more recent studies have demonstrated that conservation metrics as assessed by Red List criteria align well with fisheries assessments of stock status (e.g. Davies & Baum, 2012; Fernandes et al., 2017). Thus, it can be concluded that threat categories identified through the Red List criteria do not exaggerate extinction or extirpation risk and occurrences of disagreement between the two approaches are rare (Davies & Baum, 2012; Fernandes et al., 2017). IUCN have specifically identified this issue in the guidelines for applying extinction risk criteria (IUCN, 2017).
+
+## Analysis of IUCN Red List for Drivers of Extinction
+
+In this analysis the drivers of decline of threatened species (IUCN Red List categories Critically Endangered, Endangered and Vulnerable) in the 12 taxa for which extinction risk was assessed were summarized. Drivers of decline included: Residential and Commercial Development; Biological Resource Use; Pollution; Transport and Service Corridors; Invasive Species, Genes and Diseases; Climate Change and Severe Weather; Human Intrusions and Disturbance; Agriculture and Aquaculture; Energy Production and Mining; Natural System Modifications. Whilst many of the IUCN drivers of biodiversity decline are relatively straightforward to interpret, the category “Biological Resource Use” requires some explanation. This refers to the effects of targeted catch for commercial and artisanal fisheries, but also bycatch and/or bykill, as a cause of extinction risk; as well as a range of other harvesting activities including for the aquarium trade, marine curio trade, shell collecting and traditional medicine.
+It should be noted that for many taxa there are multiple drivers of decline and we have counted each threat for each species.
+
+
+# Habitat loss
+
+# Drivers of biodiversity loss in the ocean
+
+[**EMPTY**]
+
+\pagebreak
+
+# Current conservation efforts
+
+The other variables used in this study and featured in the `pressures_gdp_biodiversity` file of the dataset are described in Table SII. 
+
+*Table SII: additional variables used in this section* 
+
+| Variable      | Variable name | Description | Source     |
+| :---      |    :----:   | :----: |         ---: |
+| Exclusive Economic Zone | eez_area | Area of the EEZ for each country in squared kilometers | Sala *et al.,* 2018 |
+| Marine Protected Area | mpa | MPA extension in squared kilometers in each country. The dataset was filtered by MPAs whose status was either designated, inscribed, adopted or established, thus removing not reported and proposed categories | We obtained MPA extension from the World Database of Protected Areas (UNEP-WCMC accessed in February 2019) |
+| Species Biodiversity | biodiversity_points | Extracted value of estimated species diversity | Reygondeau and Dunn (2018) |
+| Gross Domestic Product per capita | gdp_total | total GDP per country (current USD) | World Bank Open data: https://data.worldbank.org/ | 
+| Protected habitat area | protected | Overlap between protected area and the target habitat in squared kilometers | This paper |
+| Marine Wilderness | wilderness | Areas identified from Jones et al. 2018 that have very little anthropogenic impact (lowest 10% from 15 stressors) and very low combined cumulative impact from these stressors. | Jones et al., 2018
+
+We calculated the protected habitat area by intersecting the dissolved MPA layer per each country EEZ for each of the habitat listed in Table SI. The resulting data are reported in the dataset `habitat_protected`.
+It needs to be clarified that being inside a MPA does not mean the habitat is protected, since the MPA objective and regulamentation might not involve the habitat at all. However, we consider that being inside an environmentally managed area should provide at least some indirect benefits to the habitat conservation.
+
+
+
+
+```{r}
+# loading needed libraries
+
+library(tidyverse)
+library(readr)
+library(cowplot)
+library(ggthemes)
+library(broom)
+library(knitr)
+library(RCurl)
+library(janitor)
+library(vegan)
+library(ggfortify)
+library(cluster)
+library(factoextra)
+library(FactoMineR)
+library(stringr)
+require("igraph")
+library(tools)
+
+```
+
+
+Datasets are three `.csv` text files:
+
+- `habitat_data`: which contains all the habitat extensions in squared kilometers for each country, as well as the area of each country Exclusive Economic Zone (EEZ) and total MPA area both in squared kilometers;
+- `habitat_protected`: which contains how much of each habitat within each country is protected (protected);
+- `pressures_gdp_biodiversity`: which contains the environmental pressures, the total GDP (Gross Domestic Product in USD) and the estimated biodiversity for each of the country;
+
+Download an .Rmd version of this file from [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/01-Supplementary_material.Rmd).
+
+\pagebreak
+
+
+## Data access and sources
+
+Beware that while all data used are open source (except for kelp which source has been removed until the dataset is published), specific permission to reuse and publish them are needed from data providers. Credit for the use of those data should also go to the proper source listed in Table SI and SII. 
+
+
+## Figure 4: Relationship among conservation efforts, world economy and natural biodiversity. 
+
+
+
+
+```{r fig.align='center', fig.width=8, fig.height=4}
+
+# Loading pressure data
+pressures <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv"))
+toplot <- pressures %>% 
+        select(country, eez_area, 
+               mpa, gdp_tot, biodiversity_points) %>% 
+        na.omit() %>% 
+        mutate(percent_GDP = (gdp_tot/max(gdp_tot))*100) %>% 
+        mutate(percent_MPA = (mpa/eez_area)*100)
+
+# Panel a 
+
+pa <- ggplot(toplot, aes(x=log10(percent_GDP), y=log10(percent_MPA))) +
+        geom_point(col="white", fill= "#32aeff", 
+                   shape=21, size=5, 
+                   show.legend = F, alpha=0.6)+ 
+        geom_smooth(method='lm',formula=y~x, fill="gray70") +
+        theme_light() +
+        labs(x="log10(World GDP %)", y="log10(MPA/EEZ %)") +
+        theme(legend.position = "",
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              strip.text.x = element_blank())
+
+# Panel b
+
+pb <- ggplot(toplot, aes(x=percent_MPA, y=biodiversity_points)) +
+        geom_rect(xmin=0, xmax=30, 
+                  ymin=-Inf, ymax=Inf, 
+                  fill="gray90", col="black", 
+                  alpha=0.6, linetype="dotted")+
+        geom_point(col="white", fill= "#F8692F", 
+                   shape=21, size=5, 
+                   show.legend = F, alpha=0.6)+ 
+        theme_light() +
+        labs(x="MPA/EEZ %", y="Species Biodiversity")+
+        theme(legend.position = "",
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              strip.text.x = element_blank())
+
+
+# this function creates a panel with all the plots created above
+plot_grid(pa, pb, labels="auto", nrow = 1)
+
+```
+
+
+
+In this figure we report the comparisons among the variables in the `pressures_gdp_biodiversity` dataset. In Figure XXa, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
+
+
+
+*Table SIV: % MPA/EEZ vs % of World GDP regression*
+
+```{r}
+pressures2 <- pressures %>% 
+        select(country, eez_area, mpa, gdp_tot) %>% 
+        na.omit() %>% 
+        mutate(percent_GDP = (gdp_tot/max(gdp_tot))*100) %>% 
+        mutate(percent_MPA = (mpa/eez_area)*100) 
+
+kable(tidy(lm(percent_MPA ~ percent_GDP, data=pressures2)))
+
+summary(lm(percent_MPA ~ percent_GDP, data=pressures2))
+```
+
+*Table SV: Species Biodiversity vs % MPA/EEZ regression*
+
+```{r}
+pressures3 <- pressures %>% 
+        select(country, eez_area, mpa, gdp_tot, biodiversity_points) %>% 
+        na.omit() %>%
+        mutate(percent_MPA = (mpa/eez_area)*100) 
+
+kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
+
+```
+
+
+## Figure 5. Current conservation efforts over key selected habitats. 
+
+### Percent protected and percent in wilderness for each habitat globally calculations 
+
+The amount of each habitat within marine protected areas or wilderness was calculated in ArcGIS Pro 2.4 using the data in table SI and SII. The marine protected area polygons were first projected into the same projection and rasterized at the same resolution (~1km) as the global wilderness data (World Behrman). Next, each habitat was converted rasterized at the same resolution, using “Point to Raster” or “Polygon to Raster” tools depending on the data type. The number of pixels for each habitat were counted. Next, the habitat pixels within either marine protected area were counted using the “Extract by Mask” tool. This was repeated for the wilderness areas. These pixel counts were then used to calculate the percent of each habitat within marine protected areas or within wilderness displayed in Table SX. 
+Seagrasses spatial data in the United States had several geometry problems that were solved by first dicing the features with a maximum vertex of 1000 before geoprocessing this file. 
+
+### *Effort gap* calculations
+
+We created this figure by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, black circles represent countries hosting one of the key habitat in the x-axis. The y-axis represents how the percentage of area each country is protecting of that habitat within its EEZ. Most of the countries are below the 30% target (white line), which has been identified  as a threshold to ensure the maintenance of habitat’s ecosystems services. The blue circles represent the mean % of all the countries protection efforts to that habitat, whereas the red circles are the median % of all the countries protection efforts. 
+
+*Table SVI: The percent of each habitat within Marine Wilderness as defined by Jones et al. 2018 and  within marine protected areas (MPAs).*
+
+```{r echo=FALSE, warning=TRUE}
+wilderness <- read.csv(
+text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/wilderness_protected.csv")
+        ) 
+
+knitr::kable(
+        wilderness %>% 
+                mutate_if(is.numeric, round, 2),
+        col.names = c("Habitats", 
+                      "Within wilderness (%)", 
+                      "Within MPAs (%)")
+        )
+
+```
+
+
+
+
+```{r fig.align='center', fig.height=6, fig.width=4}
+
+
+protected_areas <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv"))
+
+toplot <- protected_areas %>%
+        filter(habitat_area > 0) %>% # first we filter absent habitat for each country
+        mutate(pp = (protected/habitat_area)*100) %>% # Then we calculate the % protected of each habitat
+        group_by(habitat) %>% # we group the data for each habitat
+        mutate(mean_pp = mean(pp), 
+               median_pp = median(pp)) %>% # here we calculate the mean percent protected and the median pp
+        ungroup() %>% # the code section below is for graphic purposes
+        mutate(habitat = factor(.$habitat, 
+                                labels=c("Cold Corals", 
+                                         "Coral Reefs",
+                                         "Estuaries", 
+                                         "Hydrothermal vents",
+                                         "Kelp", 
+                                         "Mangroves", 
+                                         "Ridges",
+                                         "Saltmarshes", 
+                                         "Seagrasses",
+                                         "Seamounts guyots", 
+                                         "Shelf valley canyons",
+                                         "Trenches")))
+toplot$habitat <-
+        factor(toplot$habitat, levels = c(
+                "Estuaries",
+                "Mangroves",
+                "Saltmarshes",
+                "Seagrasses",
+                "Coral Reefs",
+                "Kelp",
+                "Shelf valley canyons",
+                "Cold Corals",
+                "Seamounts guyots",
+                "Trenches",
+                "Hydrothermal vents",
+                "Ridges"
+        ))
+
+toplot2 <- read.csv("data/wilderness_protected.csv") %>%
+        clean_names() %>%
+        pivot_longer(-habitat, names_to = "type", values_to = "percent")
+
+
+toplot2$habitat <-factor(toplot2$habitat,
+                         levels = c("Estuaries","Mangroves",
+                                    "Saltmarsh","Seagrasses",
+                                    "Coral Reefs","Kelp",
+                                    "Shelf and Canyons","Cold Corals",
+                                    "Seamounts and Guyots","Trenches",
+                                    "Hydrothermal Vents",
+                                    "Ridges"))
+
+
+# day/night colours
+night_colour <- c("aquamarine")
+day_colour <- c("darkblue")
+
+# generate data for a one-hour sunrise gradient
+sunrise_pd <- GenerateGradientData(start_hour = 0,
+                                   stop_hour = 13,
+                                   start_colour = night_colour,
+                                   stop_colour = day_colour,
+                                   x_resolution = 1000)
+
+
+
+pa <- ggplot(toplot, aes(x = habitat, y = pp, col=as.integer(habitat), group=habitat)) +
+        geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
+        # gradient backgrounds for sunrise and sunset
+        geom_rect(data = sunrise_pd,
+                  mapping = aes(xmax = xmax,
+                                xmin = xmin,
+                                ymax = ymax,
+                                ymin = ymin),
+                  fill = sunrise_pd$grad_colours,
+                  inherit.aes = FALSE) +
+        geom_jitter(size = 2, alpha = 0.5, width = 0.2, col="black", fill="white")+
+        geom_hline(yintercept = 30, col="white", size=0.9)+
+        geom_segment(aes(x = habitat, xend = habitat,
+                         y = median_pp, yend = mean_pp), size = 0.1, col="white")+
+        geom_point(aes(y= mean_pp), size = 3, pch=21, fill="blue") +
+        geom_point(aes(y= median_pp), size = 3, pch=21, fill="red") +
+        labs(x = NULL, y = "Area %") +
+        ylim(0,100)+
+        theme(legend.position = "none",
+              panel.background = element_blank(),
+              panel.grid = element_blank(), 
+              axis.text.x = element_text(angle=90))
+
+
+
+
+pb <- ggplot(toplot2, aes(x=habitat, y=percent))+
+        geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
+        # gradient backgrounds for sunrise and sunset
+        geom_rect(data = sunrise_pd,
+                  mapping = aes(xmax = xmax,
+                                xmin = xmin,
+                                ymax = ymax,
+                                ymin = ymin),
+                  fill = sunrise_pd$grad_colours,
+                  inherit.aes = FALSE) +
+        geom_col(aes(fill=type), position = "dodge", col="black" , alpha=0.3)+
+        scale_fill_manual(values=c("white", "gray10"), labels = c("Protected (MPA)", "% of wilderness area"))+
+        labs(x="", y="Area %")+
+        theme(legend.position = "top",
+              legend.title = element_blank(),
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              axis.text.x = element_blank(),
+              strip.text.x = element_blank())
+
+
+plot_grid(pb, pa, labels = "auto", ncol=1, align = "v")
+
+```
+
+
+
+
+# The future of marine biodiversity 
+
+
+```{r fig.align='center', fig.width=5.5, fig.height=8}
+
+
+
+
+df <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/Internationa_agreements.csv")) %>% 
+        clean_names() 
+
+rownames(df) <- df$convention_agreement
+
+res.dist <- dist(df[4:ncol(df)], method = "euclidean")
+
+
+res.hc <- hclust(d = res.dist, method = "ward.D2")
+
+grp <- cutree(res.hc, k = 3)
+
+
+pa <- fviz_dend(res.hc, k = 3, # Cut in four groups
+          palette = c("#c50000", "#408d78", "#007cba"),
+          type = "phylogenic", repel = T,
+          phylo_layout = "layout.gem", cex = .7, 
+          rect=TRUE)
+
+df2 <- df %>% 
+        pivot_longer(-c(long_name, convention_agreement, year),names_to="class", values_to = "value")
+
+pb <- df2 %>% 
+        select(class, convention_agreement, year, value) %>% 
+        filter(value>0) %>% 
+        mutate(class = toTitleCase(gsub("\\_", " ", .$class))) %>% 
+        arrange(class) %>% 
+        group_by(class) %>%
+        count(value) %>% 
+        arrange(-n) %>% 
+        ggplot(aes(x=reorder(class, n), y=n, fill=class))+
+        geom_col(col="black", alpha=0.5)+
+        labs(x="", y="N° of conventions / agreements")+
+        scale_fill_manual(values =  PAL)+
+        coord_flip()+
+        theme_hc()+
+        theme(legend.position = "")
+
+
+
+pc <- df2 %>% 
+        select(class, convention_agreement, year, value) %>% 
+        filter(value>0) %>% 
+        arrange(class) %>% 
+        group_by(class, year) %>% 
+        count(value) %>%
+        group_by(class) %>%
+        mutate(cumsum=cumsum(n)) %>% 
+        ggplot(aes(x=year, y=cumsum, col=class))+
+        geom_line(size=1)+
+        labs(x="", y="N°")+
+        scale_color_manual(values =  PAL)+
+        theme_hc()+
+        theme(legend.position = "")
+
+cowplot::plot_grid(pa, pb, pc,  labels = "auto", nrow = 3)
+
+```
+
+
+
+
+
+
+
+# Data references 
+
+
+- **Biodiversity data reference**: Reygondeau, Gabriel, and Daniel Dunn. "Pelagic Biogeography☆☆☆☆." (2018).
+
+- **Cold corals**: Freiwald A, Rogers A, Hall-Spencer J, Guinotte JM, Davies AJ, Yesson C, Martin CS, Weatherdon LV (2017). Global distribution of cold-water corals (version 5.0). Fifth update to the dataset in Freiwald et al. (2004) by UNEP-WCMC, in collaboration with Andre Freiwald and John Guinotte. Cambridge (UK): UN Environment World Conservation Monitoring Centre. URL: http://data.unep-wcmc.org/datasets/3
+
+- **Coral Reefs**: UNEP-WCMC, WorldFish Centre, WRI, TNC (2018). Global distribution of warm-water coral reefs, compiled from multiple sources including the Millennium Coral Reef Mapping Project. Version 4.0. Includes contributions from IMaRS-USF and IRD (2005), IMaRS-USF (2005) and Spalding et al. (2001). Cambridge (UK): UN Environment World Conservation Monitoring Centre. URL: http://data.unep-wcmc.org/datasets/1
+
+- **EEZ data reference**: Sala, E., Mayorga, J., Costello, C., Kroodsma, D., Palomares, M. L. D., Pauly, D., […] Zeller, D. (2018). The economics of fishing the high seas. Science Advances, 4(6), eaat2504. https://doi.org/10.1126/sciadv.aat2504
+
+- **Estuaries**: Alder J (2003). Putting the coast in the “Sea Around Us”. The Sea Around Us Newsletter 15: 1-2. URL: http://seaaroundus.org/newsletter/Issue15.pdf; http://data.unep-wcmc.org/datasets/23 (version 2.0) 
+
+- **Kelp**: Jorge Assis (submitted for publication) 
+
+- **Mangroves**: Giri, C., E. Ochieng, L. L. Tieszen, Z. Zhu, A. Singh, T. Loveland, J. Masek, and N. Duke. (2011). “Status and Distribution of Mangrove Forests of the World Using Earth Observation Satellite Data: Status and Distributions of Global Mangroves.” Global Ecology and Biogeography 20 (1): 154–59. https://doi.org/10.1111/j.1466-8238.2010.00584.x.
+
+- **Saltmarsh**: Mcowen C, Weatherdon LV, Bochove J, Sullivan E, Blyth S, Zockler C, Stanwell-Smith D, Kingston N, Martin CS, Spalding M, Fletcher S (2017). A global map of saltmarshes. Biodiversity Data Journal 5: e11764. Paper DOI: https://doi.org/10.3897/BDJ.5.e11764; Data URL: http://data.unep-wcmc.org/datasets/43 (v.6)
+
+- **Seagrasses**: UNEP-WCMC, Short FT (2018). Global distribution of seagrasses (version 6.0). Sixth update to the data layer used in Green and Short (2003). Cambridge (UK): UN Environment World Conservation Monitoring Centre. URL: http://data.unep-wcmc.org/datasets/7
+
+- **Sills-Rift Valleys**: Harris, P. T., Macmillan-Lawler, M., Rupp, J., & Baker, E. K. (2014). Geomorphology of the oceans. Marine Geology, 352, 4–24. https://doi.org/10.1016/j.margeo.2014.01.011
+Hydrothermal vents: Beaulieu, S.E., Szafranski, K. (2018) InterRidge Global Database of Active Submarine Hydrothermal Vent Fields, Version 3.4. World Wide Web electronic publication available from http://vents-data.interridge.org Accessed 2019-02-20.
+
+- **Wilderness** Jones, K. R., Klein, C. J., Halpern, B. S., Venter, O., Grantham, H., Kuempel, C. D., ... & Watson, J. E. (2018). The location and protection status of Earth’s diminishing marine wilderness. Current Biology, 28(15), 2506-2512.
+
+
+
+# Contacts
+
+- Fabio Favoretto: favoretto.fabio@gmail.com
+
+- Joy Kumagai: jkumagai96@gmail.com
+
+- Octavio Aburto: maburto@ucsd.edu
+
+
+---
