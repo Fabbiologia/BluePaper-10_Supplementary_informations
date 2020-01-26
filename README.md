@@ -33,7 +33,7 @@ Datasets are stored in the `data` folder and are five `.csv` text files:
 While all data used are available open source, some have rules for their use. 
 Therefore, these data cannot be shared without explicit permission from the data providers. 
 
-Additional info can be found in the supplementary material text. 
+Additional info can be found in the supplementary material [text](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/Supplementary_material_Marine_biodiversity_in_a_changing_world.pdf). 
 
 
 # Contacts: 
