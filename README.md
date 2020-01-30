@@ -10,14 +10,23 @@ Download an .Rmd version of this file from [**here**](https://raw.githubusercont
 
 The R code was built with `r getRversion()` and was written using R-studio IDE (v.1.2.5033), as well as this document, using the following packages that can be installed in R or through R-studio using the following commands: 
 
-- `install.packages("dplyr")`
-- `install.packages("ggplot2")`
+- `install.packages("tidyverse")`
 - `install.packages("readr")`
 - `install.packages("cowplot")`
 - `install.packages("ggthemes")`
 - `install.packages("broom")`
 - `install.packages("knitr")`
 - `install.packages("RCurl")`
+- `install.packages("janitor")`
+- `install.packages("vegan")`
+- `install.packages("ggfortify")`
+- `install.packages("cluster")`
+- `install.packages("factoextra")`
+- `install.packages("FactoMineR")`
+- `install.packages("stringr")`
+- `install.packages("igraph")`
+- `install.packages("tools")`
+
 
 Datasets are stored in the `data` folder and are five `.csv` text files:
 
