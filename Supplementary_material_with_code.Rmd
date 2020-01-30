@@ -6,7 +6,6 @@ output:
   bookdown::pdf_document2:
     toc: yes
     fig_caption: false
-    number_sections: true
     df_print: kable
     latex_engine: xelatex
 
@@ -28,13 +27,64 @@ knitr::opts_chunk$set(
 	warning = FALSE
 )
 
+# formula to create background gradient from data
+GenerateGradientData <- function(start_hour,
+                                 stop_hour,
+                                 start_colour,
+                                 stop_colour,
+                                 x_resolution = 100) {
+        
+        # define the colour palette
+        colour_function <- colorRampPalette(
+                c(start_colour, stop_colour),
+                alpha = TRUE)
+        
+        # set up the rect coordinates
+        x_range <- seq(start_hour,
+                       stop_hour,
+                       length.out = x_resolution + 1)
+        grad_xmin <- x_range[-length(x_range)]
+        grad_xmax <- x_range[c(1:x_resolution + 1)]
+        
+        # define colours
+        grad_colours <- colour_function(x_resolution)
+        
+        # return data.frame
+        data.frame(
+                xmin = grad_xmin,
+                xmax = grad_xmax,
+                ymin = -Inf,
+                ymax = Inf,
+                grad_colours = grad_colours
+        )
+}
+
+# personal palette
+PAL <- c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', 
+         '#f58231', '#911eb4', '#46f0f0', '#f032e6', 
+         '#bcf60c', '#fabebe', '#008080', '#e6beff', 
+         '#9a6324', '#fffac8', '#800000', '#aaffc3', 
+         '#808000', '#ffd8b1', '#000075', '#808080', 
+         '#ffffff', '#000000')
+
 # loading needed libraries
 
 library(tidyverse)
-library(broom)
 library(readr)
+library(cowplot)
+library(ggthemes)
+library(broom)
 library(knitr)
 library(RCurl)
+library(janitor)
+library(vegan)
+library(ggfortify)
+library(cluster)
+library(factoextra)
+library(FactoMineR)
+library(stringr)
+require("igraph")
+library(tools)
 
 ```
 
@@ -43,9 +93,15 @@ library(RCurl)
 
 **Preface**
 
-This supplementary was was built with `r getRversion()` programming language and was written using R-studio IDE (v.1.2.5033) by a R-markdown file. Data and R code scripts to replicate figures and analysis can be downloaded from [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations). Please find [**the contacts informations**][Contacts] at the end of this supplementary to get in touch with the authors to report bugs or problems. 
+This supplementary was was built with `r getRversion()` programming language and was written using R-studio IDE (v.1.2.5033) by a R-markdown file. Data and R code scripts to replicate figures and analysis can be downloaded from [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations), as well as a [R-markdown](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/Supplementary_material_Marine_biodiversity_in_a_changing_world.Rmd) version of this supplementary.
+
+In this supplementary, we assume some knowledge of the R programming language. If instructions in the [Readme](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/README.md) file are followed, this should be reproducible using R studio. Please find [**the contacts informations**][Contacts] at the end of this supplementary to get in touch with the authors to report bugs or problems. 
+Download an .Rmd version of this file from [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/Supplementary_material_Marine_biodiversity_in_a_changing_world.Rmd).
+
+**Disclaimer**
 
 Beware that while all data used are open source (except for kelp which source has been removed until the dataset is published), specific permission to reuse and publish them are needed from data providers. Credit for the use of those data should also go to the proper source listed in Table SI and SII. 
+Due to the size of some of the data layers, raw data and code is not presented here for the biodiversity and habitat figures (S1, S2). 
 
 
 \pagebreak
@@ -65,7 +121,7 @@ From the initial dataset (>1 billion entries), we removed records (i) with spati
 
 \pagebreak
 
-## The distribution of habitats.
+## The distribution of habitats
 
 ### Habitat area 
 
@@ -90,11 +146,13 @@ We obtained the polygons of 6 habitats closely associated with the coast, and 6 
 
 ### Habitat Diversity Calculations 
 
-The global habitat diversity index was based on the twelve habitats in Table SI. First these habitats were converted into binary rasters at a 1km resolution and projected into the World Robinson projection. A constant raster was created at a resolution of 1,000km by 1,000km. Next, these rasters were imported into R Studio. The packages `raster`, `sp`, `rgdal`, and `tidyverse` were used to work with the data. Within each cell of the constant raster, the number of 1km pixels that contained a habitat were summed. Each of the cells of the constant raster was then viewed as a community and the Shannon Index of diversity was used to calculate a diversity value for each cell using the number of cells of each habitat as species counts. These values were then transformed into a raster and uploaded into ArcGIS Pro 2.4 to create Figure S2. 
+The global habitat diversity index was based on the twelve habitats in Table SI. First these habitats were converted into binary rasters at a 1km resolution and projected into the World Robinson projection. A constant raster was created at a resolution of 1,000km by 1,000km. Next, these rasters were imported into R Studio. The packages `raster`, `sp`, `rgdal`, and `tidyverse` were used to work with the data. Within each cell of the constant raster, the number of 1km pixels that contained a habitat were summed. Each of the cells of the constant raster was then viewed as a community and the Shannon Index of Biodiversity was used to calculate a biodiversity value for each cell using the number of cells of each habitat as species counts. These values were then transformed into a raster and uploaded into ArcGIS Pro 2.4 to create Figure S2. 
 
 
-![](figs/FIgureS2.png)
+![Figure S2: habitat diversity map](figs/FIgureS2.png)
 *Figure S2: habitat diversity map in 1,000 km by 1,000 km grid calculated using the shannon index over the number of pixel for each habitat in the grid*
+
+
 
 
 \pagebreak
@@ -105,7 +163,8 @@ We used the human impact undex from the paper Halpern et al., 2008 and download 
 The relationship between species richness and the corresponding human impact index was assesed by computing the centroid of the relationship in a log-log dimension (Figure 1b). Based on the position of the geographical cell we established four categories: high richness and high impact in red, low richness and high impact in violet, high richness low impact in green, and finally low richness and low impact in blue. Then the Euclidean distance among each geographical cell to the centroid of each category has been computed, and the shades of color in Figure 1b represents these distances intervals. 
 
 
-# The decline of marine species and habitats (Figure 2, 3 main text)
+
+# The decline of marine species and habitats (Figure 2,3 main text)
 
 ## Figure 2: Human-driven extinction risks
 
@@ -143,11 +202,63 @@ We calculated the protected habitat area by intersecting the dissolved MPA layer
 
 \pagebreak
 
+
+
+
 ## Figure 4: Relationship among conservation efforts, world economy and natural biodiversity. 
 
-In Figure 4, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
-Data table used to create Figure 4 is available [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/pressures_gdp_biodiversity.csv).
 
+In Figure 4, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
+
+
+```{r fig4,  fig.align='center', fig.width=8, fig.height=4}
+
+# Loading pressure data
+pressures <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv"))
+toplot <- pressures %>% 
+        select(country, eez_area, 
+               mpa, gdp_tot, biodiversity_points) %>% 
+        na.omit() %>% 
+        mutate(percent_GDP = (gdp_tot/max(gdp_tot))*100) %>% 
+        mutate(percent_MPA = (mpa/eez_area)*100)
+
+# Panel a 
+
+pa <- ggplot(toplot, aes(x=log10(percent_GDP), y=log10(percent_MPA))) +
+        geom_point(col="white", fill= "#32aeff", 
+                   shape=21, size=5, 
+                   show.legend = F, alpha=0.6)+ 
+        geom_smooth(method='lm',formula=y~x, fill="gray70") +
+        theme_light() +
+        labs(x="log10(World GDP %)", y="log10(MPA/EEZ %)") +
+        theme(legend.position = "",
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              strip.text.x = element_blank())
+
+# Panel b
+
+pb <- ggplot(toplot, aes(x=percent_MPA, y=biodiversity_points)) +
+        geom_rect(xmin=0, xmax=30, 
+                  ymin=-Inf, ymax=Inf, 
+                  fill="gray90", col="black", 
+                  alpha=0.6, linetype="dotted")+
+        geom_point(col="white", fill= "#F8692F", 
+                   shape=21, size=5, 
+                   show.legend = F, alpha=0.6)+ 
+        theme_light() +
+        labs(x="MPA/EEZ %", y="Species Biodiversity")+
+        theme(legend.position = "",
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              strip.text.x = element_blank())
+
+
+# this function creates a panel with all the plots created above
+plot_grid(pa, pb, labels="auto", nrow = 1)
+
+```
+*Figure 4: Relationship among conservation efforts, world economy and natural biodiversity (more detail in main text)*
 
 
 ### Linear models
@@ -158,8 +269,6 @@ Below we calculate and report the linear model statistics of the two scatterplot
 *Table SIV: % MPA/EEZ vs % of World GDP regression*
 
 ```{r echo=FALSE}
-pressures <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv"))
-
 pressures2 <- pressures %>% 
         select(country, eez_area, mpa, gdp_tot) %>% 
         na.omit() %>% 
@@ -187,13 +296,11 @@ kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
 
 ### Percent protected and percent in wilderness for each habitat globally calculations 
 
-Data used to create Figure 5a is available [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/wilderness_protected.csv), and the data for Figure 5b is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv).
-
 The amount of each habitat within marine protected areas or wilderness was calculated in ArcGIS Pro 2.4 using the data in table SI and SII. The marine protected area polygons were first projected into the same projection and rasterized at the same resolution (~1km) as the global wilderness data (World Behrman). Next, each habitat was converted rasterized at the same resolution, using “Point to Raster” or “Polygon to Raster” tools depending on the data type. The number of pixels for each habitat were counted. Next, the habitat pixels within either marine protected area were counted using the “Extract by Mask” tool. This was repeated for the wilderness areas. These pixel counts were then used to calculate the percent of each habitat within marine protected areas or within wilderness displayed in Table SX. 
 Seagrasses spatial data in the United States had several geometry problems that were solved by first dicing the features with a maximum vertex of 1000 before geoprocessing this file. 
 
 
-*Table SVI: The percent of each habitat within Marine Wilderness as defined by Jones et al. 2018 and within marine protected areas (MPAs).*
+*Table SVI: The percent of each habitat within Marine Wilderness as defined by Jones et al. 2018 and  within marine protected areas (MPAs).*
 ```{r echo=FALSE, warning=TRUE}
 wilderness <- read.csv(
 text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/wilderness_protected.csv")
@@ -214,14 +321,213 @@ knitr::kable(
 
 We created Figure 5b by filtering all the habitats with a higher than 0 cover in each country and we calculated how much habitat is protected in % in each country. Then, we calculated the mean percent protected of each habitat in all the countries, and the median percent protected of each habitat in all the countries. In the plot, black circles represent countries hosting one of the key habitat in the x-axis. The y-axis represents how the percentage of area each country is protecting of that habitat within its EEZ. Most of the countries are below the 30% target (white line), which has been identified  as a threshold to ensure the maintenance of habitat’s ecosystems services. The blue circles represent the mean % of all the countries protection efforts to that habitat, whereas the red circles are the median % of all the countries protection efforts. 
 
+Now with the following code we can recreate figure 5 in the main text:
+```{r fig5, fig.align='center', fig.height=6, fig.width=4, fig.cap="Figure 5. Current conservation efforts over key selected habitats."}
+
+
+protected_areas <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv"))
+
+toplot <- protected_areas %>%
+        filter(habitat_area > 0) %>% # first we filter absent habitat for each country
+        mutate(pp = (protected/habitat_area)*100) %>% # Then we calculate the % protected of each habitat
+        group_by(habitat) %>% # we group the data for each habitat
+        mutate(mean_pp = mean(pp), 
+               median_pp = median(pp)) %>% # here we calculate the mean percent protected and the median pp
+        ungroup() %>% # the code section below is for graphic purposes
+        mutate(habitat = factor(.$habitat, 
+                                labels=c("Cold Corals", 
+                                         "Coral Reefs",
+                                         "Estuaries", 
+                                         "Hydrothermal vents",
+                                         "Kelp", 
+                                         "Mangroves", 
+                                         "Ridges",
+                                         "Saltmarshes", 
+                                         "Seagrasses",
+                                         "Seamounts guyots", 
+                                         "Shelf valley canyons",
+                                         "Trenches")))
+toplot$habitat <-
+        factor(toplot$habitat, levels = c(
+                "Estuaries",
+                "Mangroves",
+                "Saltmarshes",
+                "Seagrasses",
+                "Coral Reefs",
+                "Kelp",
+                "Shelf valley canyons",
+                "Cold Corals",
+                "Seamounts guyots",
+                "Trenches",
+                "Hydrothermal vents",
+                "Ridges"
+        ))
+
+toplot2 <- read.csv("data/wilderness_protected.csv") %>%
+        clean_names() %>%
+        pivot_longer(-habitat, names_to = "type", values_to = "percent")
+
+
+toplot2$habitat <-factor(toplot2$habitat,
+                         levels = c("Estuaries","Mangroves",
+                                    "Saltmarsh","Seagrasses",
+                                    "Coral Reefs","Kelp",
+                                    "Shelf and Canyons","Cold Corals",
+                                    "Seamounts and Guyots","Trenches",
+                                    "Hydrothermal Vents",
+                                    "Ridges"))
+
+
+# day/night colours
+night_colour <- c("aquamarine")
+day_colour <- c("darkblue")
+
+# generate data for a one-hour sunrise gradient
+sunrise_pd <- GenerateGradientData(start_hour = 0,
+                                   stop_hour = 13,
+                                   start_colour = night_colour,
+                                   stop_colour = day_colour,
+                                   x_resolution = 1000)
+
+
+
+pa <- ggplot(toplot, aes(x = habitat, y = pp, col=as.integer(habitat), group=habitat)) +
+        geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
+        # gradient backgrounds for sunrise and sunset
+        geom_rect(data = sunrise_pd,
+                  mapping = aes(xmax = xmax,
+                                xmin = xmin,
+                                ymax = ymax,
+                                ymin = ymin),
+                  fill = sunrise_pd$grad_colours,
+                  inherit.aes = FALSE) +
+        geom_jitter(size = 2, alpha = 0.5, width = 0.2, col="black", fill="white")+
+        geom_hline(yintercept = 30, col="white", size=0.9)+
+        geom_segment(aes(x = habitat, xend = habitat,
+                         y = median_pp, yend = mean_pp), size = 0.1, col="white")+
+        geom_point(aes(y= mean_pp), size = 3, pch=21, fill="blue") +
+        geom_point(aes(y= median_pp), size = 3, pch=21, fill="red") +
+        labs(x = NULL, y = "Area %") +
+        ylim(0,100)+
+        theme(legend.position = "none",
+              panel.background = element_blank(),
+              panel.grid = element_blank(), 
+              axis.text.x = element_text(angle=90))
+
+
+
+
+pb <- ggplot(toplot2, aes(x=habitat, y=percent))+
+        geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
+        # gradient backgrounds for sunrise and sunset
+        geom_rect(data = sunrise_pd,
+                  mapping = aes(xmax = xmax,
+                                xmin = xmin,
+                                ymax = ymax,
+                                ymin = ymin),
+                  fill = sunrise_pd$grad_colours,
+                  inherit.aes = FALSE) +
+        geom_col(aes(fill=type), position = "dodge", col="black" , alpha=0.3)+
+        scale_fill_manual(values=c("white", "gray10"), labels = c("Protected (MPA)", "% of wilderness area"))+
+        labs(x="", y="Area %")+
+        theme(legend.position = "top",
+              legend.title = element_blank(),
+              panel.grid = element_blank(), 
+              strip.background = element_blank(),
+              axis.text.x = element_blank(),
+              strip.text.x = element_blank())
+
+
+plot_grid(pb, pa, labels = "auto", ncol=1, align = "v")
+
+```
+*Figure 5. Current conservation efforts over key selected habitats.*
+
+
 
 \pagebreak
 
-# Reducing the risk of extinction in the ocean (Figure 6 main text)
+# Reducing the risk of extinction in the ocean 
 
-In this paragraph, we have been using a compiled information about conventions and agreements related to marine regulations. The table used is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv). 
+In this paragraph, we have been using a compiled information about conventions and agreements related to marine regulations. The table used is available [here](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv). 
 
 The datatable has 1-0 values according to whether a particular convention (rows of the data) apply to a conservation topic (columns of the data). We calculated an euclidean distance followed by a Ward hierarchical clusterization technique to explore the similarities in the conventions or agreements topics. 
+
+We used the code below to compute the cluster and create Figure 6. 
+
+```{r fig.align='center', fig.width=5.5, fig.height=8}
+# Reading the International convention and angreements dataset (ida)
+ica <- read.csv(text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv")) %>% 
+        clean_names() 
+
+
+# Changing row names
+rownames(ica) <- ica$convention_agreement
+
+# Calculating distance matrix
+res.dist <- dist(ica[4:ncol(ica)], method = "euclidean")
+
+# Cluster calculation
+res.hc <- hclust(d = res.dist, method = "ward.D2")
+
+# Cutting the cluster tree
+grp <- cutree(res.hc, k = 3)
+
+# Cluster visualization
+pa <- fviz_dend(res.hc, k = 3, # Cut in four groups
+          palette = c("#c50000", "#408d78", "#007cba"),
+          type = "phylogenic", repel = T,
+          phylo_layout = "layout.gem", cex = .7, 
+          rect=TRUE)
+
+# Converting the database in a long version for the plot of panel b and c
+ica2 <- ica %>% 
+        pivot_longer(-c(long_name, convention_agreement, year),names_to="class", values_to = "value")
+
+# Panel b
+
+pb <- ica2 %>% 
+        select(class, convention_agreement, year, value) %>% 
+        filter(value>0) %>% 
+        mutate(class = toTitleCase(gsub("\\_", " ", .$class))) %>% 
+        arrange(class) %>% 
+        group_by(class) %>%
+        count(value) %>% 
+        arrange(-n) %>% 
+        ggplot(aes(x=reorder(class, n), y=n, fill=class))+
+        geom_col(col="black", alpha=0.5)+
+        labs(x="", y="N° of conventions / agreements")+
+        scale_fill_manual(values =  PAL)+
+        coord_flip()+
+        theme_hc()+
+        theme(legend.position = "")
+
+# Panel c
+
+pc <- ica2 %>% 
+        select(class, convention_agreement, year, value) %>% 
+        filter(value>0) %>% 
+        arrange(class) %>% 
+        group_by(class, year) %>% 
+        count(value) %>%
+        group_by(class) %>%
+        mutate(cumsum=cumsum(n)) %>% 
+        ggplot(aes(x=year, y=cumsum, col=class))+
+        geom_line(size=1)+
+        labs(x="", y="N°")+
+        scale_color_manual(values =  PAL)+
+        theme_hc()+
+        theme(legend.position = "")
+
+
+# Plotting the grid
+
+cowplot::plot_grid(pa, pb, pc,  labels = "auto", nrow = 3)
+
+```
+*Figure 6: international conservation / agreements (more details in text).* 
+
+
 
 
 # Data references 
