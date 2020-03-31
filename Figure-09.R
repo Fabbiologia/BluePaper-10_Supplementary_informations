@@ -1,6 +1,6 @@
 library(tidyverse)
 library(patchwork)
-
+library(RCurl)
 
 ### Reading data and wrangling -------
 
@@ -57,7 +57,21 @@ toplot2$type <- factor(
 )       
 
 
-### Creating the plots --------
+### Data plotting -------
+
+# day/night colours
+night_colour <- c("aquamarine")
+day_colour <- c("darkblue")
+
+
+source("GeneratedGradientData.R")
+# generate data for a one-hour sunrise gradient
+sunrise_pd <- GenerateGradientData(start_hour = 0,
+                                   stop_hour = 13,
+                                   start_colour = night_colour,
+                                   stop_colour = day_colour,
+                                   x_resolution = 1000)
+
 
 p1 <- ggplot(filter(toplot2, type == "Wilderness"), aes(x=Habitat, y=percent, fill=type))+
         geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
@@ -100,7 +114,7 @@ p2 <- ggplot(filter(toplot2, type %in% c('All PAs','All PAs Managed', 'All PAs N
 p2/p1
 
 ### uncomment to save ------
-# ggsave('figs/Figure_9.pdf', dpi=300)
+ggsave('figs/Figure_9.pdf', width = 5, height = 8)
 # ggsave('figs/Figure_9.tiff', dpi=300, width = 5, height = 8)
 
 
