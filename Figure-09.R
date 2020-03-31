@@ -1,11 +1,10 @@
 library(tidyverse)
 library(patchwork)
 
-df <- read.csv('data/HabitatProtectedDataset.csv')
 
+### Reading data and wrangling -------
 
-### 
-toplot2 <- readxl::read_xlsx('data/World_habitat_analysis.xlsx') %>% 
+toplot2 <- read.csv(text = getURL('https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/world_wilderness_protected.csv')) %>% 
         mutate_at(vars(Wilderness:mpa_marine_nt), list(~(./Total)*100)) %>% 
         select(-Total) %>% 
         pivot_longer(-Habitat, names_to = "type", values_to = "percent") %>% 
@@ -55,7 +54,10 @@ toplot2$type <- factor(
                 'MPAs NT', 
                 'Wilderness'
         )
-)        
+)       
+
+
+### Creating the plots --------
 
 p1 <- ggplot(filter(toplot2, type == "Wilderness"), aes(x=Habitat, y=percent, fill=type))+
         geom_rect(xmin=0, xmax=13, ymin=-Inf, ymax=Inf, fill=day_colour)+
@@ -96,7 +98,10 @@ p2 <- ggplot(filter(toplot2, type %in% c('All PAs','All PAs Managed', 'All PAs N
               axis.text.x = element_blank())
 
 p2/p1
-ggsave('figs/Figure_9.pdf', dpi=300)
-ggsave('figs/Figure_9.tiff', dpi=300, width = 5, height = 8)
+
+### uncomment to save ------
+# ggsave('figs/Figure_9.pdf', dpi=300)
+# ggsave('figs/Figure_9.tiff', dpi=300, width = 5, height = 8)
 
 
+# END OF SCRIPT ------

@@ -1,10 +1,10 @@
 library(tidyverse)
 library(patchwork)
 
-df <- read.csv('data/HabitatProtectedDataset.csv')
+### Data loading and wrangling ----
 
-
-toplot <- df %>% filter(Cat %in% c('Total','mpa_all', 'mpa_all_m', 'mpa_all_nt')) %>% 
+toplot <- read.csv(text = getURL('https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/HabitatProtectedDataset.csv')) %>%
+        filter(Cat %in% c('Total','mpa_all', 'mpa_all_m', 'mpa_all_nt')) %>% 
         pivot_wider(names_from = Cat, values_from = Pixel_count) %>% 
         replace(is.na(.), 0) %>% 
         mutate_at(vars(mpa_all:mpa_all_nt), list(~(./Total)*100)) %>% 
@@ -47,6 +47,8 @@ toplot$Habitat <-
 
 toplot
 
+### Data plotting -------
+
 # day/night colours
 night_colour <- c("aquamarine")
 day_colour <- c("darkblue")
@@ -83,6 +85,12 @@ p1 <- ggplot(toplot, aes(x = Habitat, y = mpa_all, col=as.integer(Habitat), grou
               panel.grid = element_blank(), 
               axis.text.x = element_text(angle=90))
 p1
-ggsave('figs/Figure_11.pdf')
-ggsave('figs/Figure_11.tiff')
 
+
+### uncomment to save ------
+
+# ggsave('figs/Figure_11.pdf')
+# ggsave('figs/Figure_11.tiff')
+
+
+# END OF SCRIPT ------
