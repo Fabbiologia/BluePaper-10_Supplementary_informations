@@ -32,7 +32,9 @@ Datasets are stored in the `data` folder and are five `.csv` text files:
 - `HabitatProtectedDataset`: which contains all the habitat extensions in pixels for each country, as well as the area of each country Exclusive Economic Zone (EEZ);
 - `International_agreements`: which contains information about the international conventions / agreements made over the years to protect marine and oceanic waters; 
 - `pressures_gdp_biodiversity`: which contains the environmental pressures, the total GDP (Gross Domestic Product in USD) and the estimated biodiversity for each of the country;
-- `world_wilderness_protected`: which contains % of wilderness within each of the habitat selected (wilderness is from Jones et al., 2018); and how much of the habitat is under protection globally (expressed as number of pixels). 
+- `world_wilderness_protected`: which contains the wilderness within each of the habitat selected (wilderness is from Jones et al., 2018); and how much of the habitat is under protection globally (expressed as number of pixels). 
+
+- `world_wilderness_protected`: which contains % of wilderness and how much of the habitat is under protection globally (expressed as %). 
 
 
 ---
