@@ -1,14 +1,13 @@
 ---
-title: 'Supplementary Material of Marine biodiversity in a changing world: present status and future management'
-author: "Rogers, *et al*"
+title: 'Blue Paper 10: Critical Habitats and Biodiversity: Inventory, Thresholds, and Governance'
+author: "Lead authors Alex Rogers, Octavio Aburto-Oropeza"
 date: "Last updated `r format(Sys.time(), '%d %m, %Y')`"
 output:
-  bookdown::pdf_document2:
+  bookdown::word_document2:
     toc: yes
     fig_caption: false
     number_sections: true
     df_print: kable
-    latex_engine: xelatex
 
 indent: true
 fontsize:  12pt
@@ -50,9 +49,9 @@ Beware that while all data used are open source (except for kelp which source ha
 
 \pagebreak
 
-# The distribution of biodiversity in the ocean
+# Section 5. Inventory of marine habitats and biodiversity
 
-## The distribution of species
+## Species
 
 Biodiversity data can be found in Reygondeau, 2019. 
 
@@ -60,24 +59,22 @@ We developed a standardised database drawing on online websites with records of 
 
 From the initial dataset (>1 billion entries), we removed records (i) with spatial location as “Not Assigned” (NA) or null values, (ii) not identified to species level, and (iii) replicated among databases (i.e., records with the same species name, coordinates, and sampling details). The remaining records (731,329,129 records, >101,000 species) were assigned full taxonomic information using the Taxize library4 in R. We also used this procedure to update all species’ synonyms to valid names, as officially recognised by the Integrated Taxonomic Information System (ITIS - www.itis.gov/) and the World Register of Marine Species (WoRMS - http://www.marinespecies.org/). Next, we explored the relationship between the number of independent records (independent in time and area of sampling) and latitudinal range and thermal range for species (see Computation and analysis of a species’ thermal niche and latitudinal range) with well-known global coverage and ecology (number of observations > 2,000, 1,196 species). For each known species, we randomly selected n records (number of observations from 1 to 1,000) within the global pool and for each selected number of records (n = 1 to 1,000 records), we computed the species' latitudinal range and thermal range. The procedure was replicated 1,000 times. We then confronted the simulated latitudinal range and thermal range (1,000 simulations) to values obtained using all the information gathered on the species. We computed an interval of confidence of known range by quantifying the difference between the 1st and 99th percentile of observed latitude coordinates and thermal value, and assumed that the acceptable number of records to capture the latitudinal and thermal range was obtained when more than 950 randomly selected records were comprised within the confidence interval determined from the global pool of records. The median number of points found to capture the latitudinal range was 33 +/- 4 records and 41 +/- 3 records for thermal range. All species with less than 41 independent records were removed from further analysis. Thus, the final dataset on which all analyses presented in this study are based comprises up-to-date taxonomic information and filtered occurrences for 41,625 species, for a total of 51,459,235 records representing 17% of all accepted marine and non-fossil species (http://www.marinespecies.org/).
 
-![](figs/FigureS1.png)
+![](figs/FigureS1.pdf)
 *Figure S1. (A). Map of species richness on a 100 x100 km equal area grid with a superimposed countour map of the number of Habitat per geographical cell (see habitat section of this supplementary). (B) Plot of the latitudinal diversity gradient of all marine species, coastal species only and open ocean species only. (C) Plot of the average number of habitat per latitude.*
 
 \pagebreak
 
-## The distribution of habitats.
+## Habitats
 
-### Habitat area 
-
-We obtained the polygons of 6 habitats closely associated with the coast, and 6 more closely associated with open ocean, for a total of 12 majour habitats (Table SI). We then calculated the area for each habitat by dissolving the resulting layer by Country and projecting it into the World Cylindrical Equal Area projection, and then using the "Calculate Geometry" tool in ArcGIS v.10.5 Desktop software. Losses and gains in habitat extension that occurred the data aquisition dates were not accounted for. 
+We obtained the polygons of 6 habitats closely associated with the coast, and 6 more closely associated with open ocean, for a total of 12 majour habitats (Table SI). 
 
 *Table SI: habitat data type, date of creation, and detailed references*
 
 | Habitat |  Date of Data | Data Type | Source |
 | :---    |     :----:    |   :----:  |   ---: |
 | Estuaries | 2003 | Polygon | Alder (2003) |
-| Mangroves	| 1997 - 2000 | Polygon | Giri, et al. (2011) | 
-| Saltmarsh	| 1973 - 2015 | Points | McOwen, et al. (2017) |
+| Mangroves	| 2010 - 2016 | Polygon | Giri, et al. (2011) / https://data.unep-wcmc.org/datasets/45 | 
+| Saltmarsh	| 1973 - 2015 | Polygon | McOwen, et al. (2017) |
 | Seagrasses | 1934 - 2015 | Polygon | UNEP-WCMC, Short FT (2017) |
 | Coral Reefs | 1954 - 2018 |	Polygon | UNEP-WCMC, WorldFish Centre, WRI, TNC (2018) |
 | Kelp | NA	| Point | Jorge Assis (submitted for publication) |
@@ -124,9 +121,13 @@ It should be noted that for many taxa there are multiple drivers of decline and 
 
 \pagebreak
 
-# Current conservation efforts (Figure 4, 5 main text)
+# Section 9. Gaps and challenges in habitat protection	p. 37
 
-We calculated the protected habitat area by intersecting the dissolved MPA layer per each country EEZ for each of the habitat listed in Table SI. It needs to be clarified that being inside a MPA does not mean the habitat is protected, since the MPA objective and regulamentation might not involve the habitat at all. However, we consider that being inside an environmentally managed area should provide at least some indirect benefits to the habitat conservation.
+Percent Protected of the Habitats: 
+To understand how much of each habitat fell within all protected areas (PA), managed protected areas, and fully protected (no take) all habitat and base layers were converted into ~1km cells in the Geographic Coordinate System GCS WGS 1984. All of the following analysis was completed in ArcGIS Pro 2.4 software. It needs to be clarified that being inside a MPA does not mean the habitat is protected, since the MPA objective and regulations may not involve the habitat. However, we consider that being inside an environmentally managed area should provide at least some indirect benefits to the habitat conservation.
+The March 2020 Marine Protected Areas layers (polygons and points) were downloaded and filtered to only include PA’s where status = designated, inscribed, adopted, or established. All terrestrial MPA’s were removed (Marine = 0). UNESCO – MAB Biosphere Reserves were removed as well following UNEP-WCMC methods (https://www.protectedplanet.net/c/calculating-protected-area-coverage). For the points layer, points that had zero marine area were removed. The points were then buffered with the area of the buffer equal to the reported area. The resulting polygon and points layers were then merged together to create a final PA layer. This final PA layer was further filtered by only selecting only fully protected areas (full No-Take). In a new selected, we selected managed areas, where there was a management plan present and if the information was available, was implemented. These three layers were then converted into three rasters. 
+
+
 
 
 *Table SII: additional variables used in this section* 
@@ -134,7 +135,7 @@ We calculated the protected habitat area by intersecting the dissolved MPA layer
 | Variable      | Variable name | Description | Source     |
 | :---      |    :----:   | :----: |         ---: |
 | Exclusive Economic Zone | eez_area | Area of the EEZ for each country in squared kilometers | Sala *et al.,* 2018 |
-| Marine Protected Area | mpa | MPA extension in squared kilometers in each country. The dataset was filtered by MPAs whose status was either designated, inscribed, adopted or established, thus removing not reported and proposed categories | We obtained MPA extension from the World Database of Protected Areas (UNEP-WCMC accessed in February 2019) |
+| Marine Protected Area | mpa | MPA extension in squared kilometers in each country. The dataset was filtered by MPAs whose status was either designated, inscribed, adopted or established, thus removing not reported and proposed categories | We obtained MPA extension from the World Database of Protected Areas (UNEP-WCMC accessed in March 2020) |
 | Species Biodiversity | biodiversity_points | Extracted value of estimated species diversity | Reygondeau and Dunn (2018) |
 | Gross Domestic Product per capita | gdp_total | total GDP per country (current USD) | World Bank Open data: https://data.worldbank.org/ | 
 | Protected habitat area | protected | Overlap between protected area and the target habitat in squared kilometers | This paper |
@@ -146,7 +147,7 @@ We calculated the protected habitat area by intersecting the dissolved MPA layer
 ## Figure 4: Relationship among conservation efforts, world economy and natural biodiversity. 
 
 In Figure 4, we calculated the percentage of EEZ covered by an MPA (%MPA/EEZ) and plot it against the % of world GDP of each country. Data were transformed using the base 10 logarithm. The relationship resulted significant (Table SII). In Figure XXb, we plotted biodiversity *vs* the percentage of EEZ covered by an MPA (%MPA/EEZ). This comparison resulted not significant. The grey box represent an ideal 30% of EEZ area protected target.
-Data table used to create Figure 4 is available [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/pressures_gdp_biodiversity.csv).
+Data table used to create Figure 4 is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/pressures_gdp_biodiversity.csv).
 
 
 
@@ -166,7 +167,7 @@ pressures2 <- pressures %>%
         mutate(percent_GDP = (gdp_tot/max(gdp_tot))*100) %>% 
         mutate(percent_MPA = (mpa/eez_area)*100) 
 
-kable(tidy(lm(percent_MPA ~ percent_GDP, data=pressures2)))
+kable(tidy(lm(log1p(percent_MPA) ~ log1p(percent_GDP), data=pressures2)))
 
 ```
 
@@ -178,7 +179,7 @@ pressures3 <- pressures %>%
         na.omit() %>%
         mutate(percent_MPA = (mpa/eez_area)*100) 
 
-kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
+kable(tidy(lm(log1p(biodiversity_points) ~ log1p(percent_MPA), data=pressures3)))
 
 ```
     
@@ -187,24 +188,25 @@ kable(tidy(lm(biodiversity_points ~ percent_MPA, data=pressures3)))
 
 ### Percent protected and percent in wilderness for each habitat globally calculations 
 
-Data used to create Figure 5a is available [**here**](https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/wilderness_protected.csv), and the data for Figure 5b is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/habitat_protected.csv).
+Data used to create Figure 9 is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/Figure-09.R), and the data for Figure 11 is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/Figure-11.R).
 
-The amount of each habitat within marine protected areas or wilderness was calculated in ArcGIS Pro 2.4 using the data in table SI and SII. The marine protected area polygons were first projected into the same projection and rasterized at the same resolution (~1km) as the global wilderness data (World Behrman). Next, each habitat was converted rasterized at the same resolution, using “Point to Raster” or “Polygon to Raster” tools depending on the data type. The number of pixels for each habitat were counted. Next, the habitat pixels within either marine protected area were counted using the “Extract by Mask” tool. This was repeated for the wilderness areas. These pixel counts were then used to calculate the percent of each habitat within marine protected areas or within wilderness displayed in Table SX. 
-Seagrasses spatial data in the United States had several geometry problems that were solved by first dicing the features with a maximum vertex of 1000 before geoprocessing this file. 
+The amount of each habitat within marine protected areas or wilderness was calculated in ArcGIS Pro 2.4 using the data in table SI and SII. To calculate the percent of each habitat protected in the world, each PA dataset was intersected with each of the habitat layers using the “combine” tool in ArcGIS Pro, so that a total count for the pixels within all three PAs was calculated. These were then compared to the total number of pixels for each habitat to calculate a percent protected. The percent wilderness calculations were performed the same way by intersecting the habitat layers and wilderness layer from Jones et al. 2018. 
+To calculate the percent of each habitat protected within each EEZ, each PA dataset was intersected with each of the habitat layers, and the rasterized EEZ/Land base layer using the “combine” tool to obtain the total number of pixels of each habitat that were protected within each country. The datasets were then exported as CSV files and uploaded into R where they were joined together. These counts were then compared to the total number of habitat pixels within each country to calculate the final percent protection of each habitat within each country. 
 
 
 *Table SVI: The percent of each habitat within Marine Wilderness as defined by Jones et al. 2018 and within marine protected areas (MPAs).*
 ```{r echo=FALSE, warning=TRUE}
 wilderness <- read.csv(
-text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/wilderness_protected.csv")
-        ) 
+text = getURL("https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/world_wilderness_protected_table.csv"))
 
 knitr::kable(
         wilderness %>% 
                 mutate_if(is.numeric, round, 2),
         col.names = c("Habitats", 
                       "Within wilderness (%)", 
-                      "Within MPAs (%)")
+                      "Within all PAs (%)",
+                      "Within managed PAs (%)",
+                      "Within fully PAs (%)")
         )
 
 ```
@@ -217,7 +219,7 @@ We created Figure 5b by filtering all the habitats with a higher than 0 cover in
 
 \pagebreak
 
-# Reducing the risk of extinction in the ocean (Figure 6 main text)
+# Section 10. International conventions and agreements
 
 In this paragraph, we have been using a compiled information about conventions and agreements related to marine regulations. The table used is available [**here**](https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/International_agreements.csv). 
 
@@ -238,7 +240,7 @@ The datatable has 1-0 values according to whether a particular convention (rows 
 
 - **Kelp**: Jorge Assis (submitted for publication) 
 
-- **Mangroves**: Giri, C., E. Ochieng, L. L. Tieszen, Z. Zhu, A. Singh, T. Loveland, J. Masek, and N. Duke. (2011). “Status and Distribution of Mangrove Forests of the World Using Earth Observation Satellite Data: Status and Distributions of Global Mangroves.” Global Ecology and Biogeography 20 (1): 154–59. https://doi.org/10.1111/j.1466-8238.2010.00584.x.
+- **Mangroves**: Giri, C., E. Ochieng, L. L. Tieszen, Z. Zhu, A. Singh, T. Loveland, J. Masek, and N. Duke. (2011). “Status and Distribution of Mangrove Forests of the World Using Earth Observation Satellite Data: Status and Distributions of Global Mangroves.” Global Ecology and Biogeography 20 (1): 154–59. https://doi.org/10.1111/j.1466-8238.2010.00584.x.; downloaded from: https://data.unep-wcmc.org/datasets/45
 
 - **Saltmarsh**: Mcowen C, Weatherdon LV, Bochove J, Sullivan E, Blyth S, Zockler C, Stanwell-Smith D, Kingston N, Martin CS, Spalding M, Fletcher S (2017). A global map of saltmarshes. Biodiversity Data Journal 5: e11764. Paper DOI: https://doi.org/10.3897/BDJ.5.e11764; Data URL: http://data.unep-wcmc.org/datasets/43 (v.6)
 
