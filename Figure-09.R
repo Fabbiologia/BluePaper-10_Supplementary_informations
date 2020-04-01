@@ -103,7 +103,7 @@ p2 <- ggplot(filter(toplot2, type %in% c('All PAs','All PAs Managed', 'All PAs N
                   fill = sunrise_pd$grad_colours,
                   inherit.aes = FALSE) +
         geom_col(aes(fill=type), position = "dodge", col="black" , alpha=0.3)+
-        scale_fill_manual(values=c("white", "gray50", "black"), labels = c(" % within PAs", "% within managed PAs", "% within fully PAs"))+
+        scale_fill_manual(values=c("white", "gray50", "black"), labels = c(" % within MPAs", "% within managed MPAs", "% within fully MPAs"))+
         labs(x="", y="% of area worldwide", title = "A")+
         theme(legend.position = "top",
               legend.title = element_blank(),
@@ -114,7 +114,7 @@ p2 <- ggplot(filter(toplot2, type %in% c('All PAs','All PAs Managed', 'All PAs N
 p2/p1
 
 ### uncomment to save ------
-# ggsave('figs/Figure_9.pdf', width = 5, height = 8)
+ggsave('figs/Figure_9.pdf', width = 5, height = 8)
 # ggsave('figs/Figure_9.tiff', dpi=300, width = 5, height = 8)
 
 
