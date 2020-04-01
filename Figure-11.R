@@ -1,9 +1,9 @@
 library(tidyverse)
 library(patchwork)
-
+library(RCurl)
 ### Data loading and wrangling ----
 
-toplot <- read.csv(text = getURL('https://github.com/Fabbiologia/BluePaper-10_Supplementary_informations/blob/master/data/HabitatProtectedDataset.csv')) %>%
+toplot <- read.csv(text = getURL('https://raw.githubusercontent.com/Fabbiologia/BluePaper-10_Supplementary_informations/master/data/HabitatProtectedDataset.csv')) %>%
         filter(Cat %in% c('Total','mpa_all', 'mpa_all_m', 'mpa_all_nt')) %>% 
         pivot_wider(names_from = Cat, values_from = Pixel_count) %>% 
         replace(is.na(.), 0) %>% 
@@ -78,7 +78,7 @@ p1 <- ggplot(toplot, aes(x = Habitat, y = mpa_all, col=as.integer(Habitat), grou
                          y = mean_all, yend = median_all), size = 0.1, col="white")+
         geom_point(aes(y= mean_all), size = 3, pch=21, fill="blue") +
         geom_point(aes(y= median_all), size = 3, pch=21, fill="red") +
-        labs(x = NULL, y = "Area %") +
+        labs(x = NULL, y = "% area within MPA in the EEZ") +
         ylim(0,100)+
         theme(legend.position = "none",
               panel.background = element_blank(),
@@ -89,8 +89,8 @@ p1
 
 ### uncomment to save ------
 
-# ggsave('figs/Figure_11.pdf')
-# ggsave('figs/Figure_11.tiff')
-
+ggsave('figs/Figure_11.pdf')
+ggsave('figs/Figure_11.tiff')
+ggsave('figs/Figure_11.png', dpi = 300)
 
 # END OF SCRIPT ------
